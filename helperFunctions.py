@@ -324,11 +324,11 @@ def getContextualSentiment(review,domainWords):
         htmlStr = htmlStr + '<p><b>' + str(subject) + '</b>'
         senti = sentimentDictFinal[subject]
         if senti == 'positive':
-            htmlStr = htmlStr + '<img src="www/positive.jpg" alt="Positive" width="70" height="70"></p></br>'
+            htmlStr = htmlStr + '<img src="www/positive.jpg" alt="Positive" width="70" height="70"></p></br><hr>'
         elif senti == 'neutral':
-            htmlStr = htmlStr + '<img src="www/neutral.jpg" alt="Neutral" width="70" height="70"></p></br>'
+            htmlStr = htmlStr + '<img src="www/neutral.jpg" alt="Neutral" width="70" height="70"></p></br><hr>'
         else:
-            htmlStr = htmlStr + '<img src="www/negative.jpg" alt="Negative" width="70" height="70"></p></br>'
+            htmlStr = htmlStr + '<img src="www/negative.jpg" alt="Negative" width="70" height="70"></p></br><hr>'
         htmlStrList.append(htmlStr)
     
                                                             
