@@ -208,7 +208,7 @@ def getSimilarWords(word, reviewContextFull3W, reviewContextFull2W, reviewContex
     combScore = combScore/np.sum(combScore)
     
     similarWordsDF = pd.DataFrame({'Word' : combinedList, 'Score': combScore})
-	similarWordsDF = similarWordsDF.set_index('Word')
+    similarWordsDF = similarWordsDF.set_index('Word')
     return similarWordsDF
     
 
@@ -217,9 +217,11 @@ def getSimilarWords(word, reviewContextFull3W, reviewContextFull2W, reviewContex
 ## Find Collocated Words
 def getCollocatedWords(BigramFinder,unstemDict,numPairs=20):
     bigram_measures = nltk.collocations.BigramAssocMeasures()
-    collocations = BigramFinder.nbest(bigram_measures.likelihood_ratio, numPairs)
-    collocationsList = [unstemDict[w1][0]+' '+unstemDict[w2][0] for w1, w2 in collocations]
-    return collocationsList
+    collocations = BigramFinder.score_ngrams(bigram_measures.likelihood_ratio)
+    collocations = collocations[:numPairs]
+    collocations = [(unstemDict[x[0][0]][0]+'-'+unstemDict[x[0][1]][0],x[1]) for x in collocations]
+    collocations = dict(collocations)
+    return collocations
 
 
 #------------------------------------------------------------------------------------------------
@@ -364,6 +366,6 @@ def getThemeClusters(corpus,mostFreqWords,unstemDict,numClusters):
 
         fdist = FreqDist(synsetList)
         clusterTheme = fdist.most_common(1)[0][0] if type(fdist.most_common(1)) == list else fdist.most_common(1)[0]
-        clusterDict[clusterTheme] = clusterWords
-        
+        clusterDict[clusterTheme] = clusterWords[:20]
+ 
     return clusterDict

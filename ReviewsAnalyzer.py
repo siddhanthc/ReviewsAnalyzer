@@ -74,3 +74,12 @@ print('Done clustering similar terms and assigning topic')
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from IPython.core.display import display, HTML
+
+clusterList = []
+for dic in clusterDict:
+    themeList = [(dic,5)]
+    termList = [(term,1) for term in clusterDict[dic]]
+    themeList.extend(termList)
+    themeDict = dict(themeList)
+    clusterList.append(themeDict)
+    
