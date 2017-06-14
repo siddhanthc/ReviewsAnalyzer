@@ -18,7 +18,7 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 ps = PorterStemmer()
 
-from sklearn.cluster import MiniBatchKMeans
+from sklearn.cluster import MiniBatchKMeans, KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 import sys
@@ -29,7 +29,6 @@ import sys
 sys.path.append('vaderSentiment-master')
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from nltk import tokenize
-from nltk.collocations import BigramCollocationFinder
 from nltk import ContextIndex
 from nltk.corpus import wordnet as wn
 from nltk import FreqDist
@@ -337,6 +336,20 @@ def getContextualSentiment(review,domainWords):
 
 #------------------------------------------------------------------------------------------------
 
+# Get the sentiment for the title of the review
+def getTitleSentiment(title):
+    sentiAnalyze = SentimentIntensityAnalyzer()
+    ss = sentiAnalyze.polarity_scores(title)
+    sentiment = ''
+    if ss['pos'] >= ss['neg']:
+        sentiment = 'positive'
+    else:
+        sentiment = 'negative'
+        
+    return sentiment
+    
+#------------------------------------------------------------------------------------------------
+
 ## Get Cluster of similar words and assign a topic/theme to them
 def getThemeClusters(corpus,mostFreqWords,unstemDict,numClusters):
     reviewContextFull3W = ContextIndex(tokens=corpus.split(),context_func=contextFunc3W)
@@ -348,6 +361,7 @@ def getThemeClusters(corpus,mostFreqWords,unstemDict,numClusters):
     tfidfFit = vectorizer.fit_transform(wordContextList)
     
     kmeansModel = MiniBatchKMeans(n_clusters=numClusters, init='k-means++', n_init=1, init_size=10000, batch_size=10000, verbose=False, max_iter=1000)
+    kmeansModel = KMeans(n_clusters=numClusters, init='k-means++', n_init=1, init_size=10000, batch_size=10000, verbose=False, max_iter=1000)
     kmeansFit = kmeansModel.fit(tfidfFit)
     kmeansClusters = kmeansModel.predict(tfidfFit)
     kmeansDistances = kmeansModel.transform(tfidfFit)    
