@@ -209,7 +209,9 @@ def getSimilarWords(word, reviewContextFull3W, reviewContextFull2W, reviewContex
     
     similarWordsDF = pd.DataFrame({'Word' : combinedList, 'Score': combScore})
     similarWordsDF = similarWordsDF.set_index('Word')
-    return similarWordsDF
+    similarWords = similarWordsDF.to_dict()
+    similarWordsDict = [similarWords[di] for di in similarWords][0]
+    return similarWordsDict
     
 
 #------------------------------------------------------------------------------------------------
@@ -313,8 +315,24 @@ def getContextualSentiment(review,domainWords):
 
     # Reconstruct the sentiment dictionary with non-stemmed keys  
     sentimentDictFinal = dict(zip(sentimentDictFinalKeysRaw, sentimentDictFinal.values()))
+    
+    # Wrap the sentiments in HTML for output
+
+    htmlStrList = []
+    htmlStr = ''
+    for subject in sentimentDictFinal:
+        htmlStr = htmlStr + '<p><b>' + str(subject) + '</b>'
+        senti = sentimentDictFinal[subject]
+        if senti == 'positive':
+            htmlStr = htmlStr + '<img src="www/positive.jpg" alt="Positive" width="70" height="70"></p></br>'
+        elif senti == 'neutral':
+            htmlStr = htmlStr + '<img src="www/neutral.jpg" alt="Neutral" width="70" height="70"></p></br>'
+        else:
+            htmlStr = htmlStr + '<img src="www/negative.jpg" alt="Negative" width="70" height="70"></p></br>'
+        htmlStrList.append(htmlStr)
+    
                                                             
-    return sentimentDictFinal
+    return htmlStr,sentimentDictFinal
 
 
 #------------------------------------------------------------------------------------------------

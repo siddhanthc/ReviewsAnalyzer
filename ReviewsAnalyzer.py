@@ -59,7 +59,7 @@ reviewsDF['cleanReview'] = reviewsDF['FullReview'].apply(hf.preprocessText)
 mostFreqWords = hf.getMostFrequentWords(reviewsDF['cleanReview'],unstemDict,5)
 posTaggedWords = nltk.pos_tag(list(mostFreqWords.index))
 hotelWords = [w for w,tag in posTaggedWords if tag == 'NN']
-reviewSentiments = hf.getContextualSentiment(reviewsDF['FullReview'][1], domainWords = hotelWords)
+htmlStr, reviewSentiments = hf.getContextualSentiment(reviewsDF['FullReview'][1], domainWords = hotelWords)
 print('Done building sentiment analyzer')
 
 # Get similar word clusters along with topic
@@ -70,16 +70,8 @@ clusterDict = hf.getThemeClusters(cleanReview,mostFreqWords,unstemDict,maxCluste
 print('Done clustering similar terms and assigning topic')
 
 
-# Plotting
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-from IPython.core.display import display, HTML
-
-clusterList = []
-for dic in clusterDict:
-    themeList = [(dic,5)]
-    termList = [(term,1) for term in clusterDict[dic]]
-    themeList.extend(termList)
-    themeDict = dict(themeList)
-    clusterList.append(themeDict)
+htmlStr = ''
+for i in range(10):
+    htmlStr = htmlStr + ' hello'
+    
     
