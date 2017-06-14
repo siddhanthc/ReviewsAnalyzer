@@ -26,3 +26,7 @@ The code is entirely developed in Python (3.6) and the following packages/module
 * nltk.ContextIndex
 * nltk.corpus.wordnet
 * nltk.FreqDist
+* matplotlib
+* matplotlib.pyplot
+* wordcloud.WordCloud
+* IPython.core.display.display_html
