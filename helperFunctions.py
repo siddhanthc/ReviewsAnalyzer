@@ -208,6 +208,7 @@ def getSimilarWords(word, reviewContextFull3W, reviewContextFull2W, reviewContex
     combScore = combScore/np.sum(combScore)
     
     similarWordsDF = pd.DataFrame({'Word' : combinedList, 'Score': combScore})
+	similarWordsDF = similarWordsDF.set_index('Word')
     return similarWordsDF
     
 
