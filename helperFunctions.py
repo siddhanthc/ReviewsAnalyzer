@@ -360,8 +360,7 @@ def getThemeClusters(corpus,mostFreqWords,unstemDict,numClusters):
     vectorizer = TfidfVectorizer(min_df=5, max_features = 10000)
     tfidfFit = vectorizer.fit_transform(wordContextList)
     
-    kmeansModel = MiniBatchKMeans(n_clusters=numClusters, init='k-means++', n_init=1, init_size=10000, batch_size=10000, verbose=False, max_iter=1000)
-    kmeansModel = KMeans(n_clusters=numClusters, init='k-means++', n_init=1, init_size=10000, batch_size=10000, verbose=False, max_iter=1000)
+    kmeansModel = MiniBatchKMeans(n_clusters=numClusters, init='k-means++', n_init=1, init_size=10000, batch_size=10000, verbose=False, max_iter=1000)    
     kmeansFit = kmeansModel.fit(tfidfFit)
     kmeansClusters = kmeansModel.predict(tfidfFit)
     kmeansDistances = kmeansModel.transform(tfidfFit)    
@@ -382,7 +381,6 @@ def getThemeClusters(corpus,mostFreqWords,unstemDict,numClusters):
         clusterWordCount = mostFreqWords.ix[clusterWords[:20]]
         clusterWordCount = clusterWordCount.sort_values(by="Count",ascending=False)
            
-        synsetDict = {}
         synsetList = []
         for word in clusterWordCount.index:            
             wsn = wn.synsets(word)
@@ -394,10 +392,12 @@ def getThemeClusters(corpus,mostFreqWords,unstemDict,numClusters):
                 hypoNames = hypoNames[:-4]
                 hypoNames = [hn for hn in hypoNames if hn.strip() not in wnSynsetExcludeList]
                 synsetList.extend(hypoNames) # eliminate last 4 hyponames as they are very generic
-                synsetDict[word] = synsetList
 
-        fdist = FreqDist(synsetList)
-        clusterTheme = fdist.most_common(1)[0][0] if type(fdist.most_common(1)) == list else fdist.most_common(1)[0]
-        clusterDict[clusterTheme] = clusterWords[:20]
+        if synsetList:
+            fdist = FreqDist(synsetList)
+            clusterTheme = fdist.most_common(1)[0][0] if type(fdist.most_common(1)) == list else fdist.most_common(1)[0]
+            clusterDict[clusterTheme] = clusterWords[:20]
+        else:
+             clusterDict[clusterWords[0]] = clusterWords[:20]
  
     return clusterDict
